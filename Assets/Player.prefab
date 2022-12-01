@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1486686152245294862
 Transform:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 80
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -252,8 +252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 7022222865086535120}
-  playerCamera: {fileID: 1486686152245294862}
-  mouseSensetiviy: 100
+  playerCamera: {fileID: 1040873997430114499}
+  mouseSensetiviy: 5
   speed: 12
 --- !u!114 &4793245415656873751
 MonoBehaviour:
