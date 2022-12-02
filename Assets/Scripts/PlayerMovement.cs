@@ -42,6 +42,7 @@ public class PlayerMovement : NetworkBehaviour
 		if (IsOwner)
 		{
 			transform.position = new Vector3(Random.Range(5,5),0,Random.Range(5,5));
+
 			playerCamera.SetActive(true);
 		}
 	}
@@ -82,18 +83,20 @@ public class PlayerMovement : NetworkBehaviour
 		if (Input.GetMouseButtonDown(0))
 		{
 			RaycastHit hit;
-			Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100f) ;
-			if (hit.transform.TryGetComponent(out PlayerMovement otherPlayerMovement))
+			if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100f))
 			{
-				DamageToClient.Value = new DamageToClientData
+				if (hit.transform.TryGetComponent(out PlayerMovement otherPlayerMovement))
 				{
-					damageOrigin = OwnerClientId,
-					damageTarget = otherPlayerMovement.OwnerClientId,
-					damageWeapon = 0,
-					damageDestination = Vector3.Distance(transform.position, hit.transform.position),
-					damage = 15f
-				};
-				ServerRpc(DamageToClient.Value);
+					DamageToClient.Value = new DamageToClientData
+					{
+						damageOrigin = OwnerClientId,
+						damageTarget = otherPlayerMovement.OwnerClientId,
+						damageWeapon = 0,
+						damageDestination = Vector3.Distance(transform.position, hit.transform.position),
+						damage = 15f
+					};
+					ServerRpc(DamageToClient.Value);
+				}
 			}
 		}
 	}
