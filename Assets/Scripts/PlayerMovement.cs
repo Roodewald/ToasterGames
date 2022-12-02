@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Unity.Collections;
-using System;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -35,25 +32,25 @@ public class PlayerMovement : NetworkBehaviour
 	public float mouseSensetiviy = 100f;
 	public float speed = 12f;
 
+	private void Start()
+	{
+		//Cursor.lockState = CursorLockMode.Locked;
+	}
+
 	public override void OnNetworkSpawn()
 	{
-		DamageToClient.OnValueChanged += OnSomeValueChanged;
 		if (IsOwner)
 		{
+			transform.position = new Vector3(Random.Range(5,5),0,Random.Range(5,5));
 			playerCamera.SetActive(true);
 		}
 	}
 
-	private void OnSomeValueChanged(DamageToClientData previousValue, DamageToClientData newValue)
-	{
-		Debug.Log($"Ты {OwnerClientId}, попали по{newValue.damageTarget}");
-		Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {newValue.damageOrigin}, с дистанции {newValue.damageDestination}, на сокрушительные {newValue.damage} демага!");
-	}
+	
 
 	private void Update()
 	{
 		if (!IsOwner) return;
-
 		Shoot();
 		Look();
 		Move();
@@ -85,19 +82,38 @@ public class PlayerMovement : NetworkBehaviour
 		if (Input.GetMouseButtonDown(0))
 		{
 			RaycastHit hit;
-			Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit);
-			if (hit.transform.GetComponent<PlayerMovement>()!= null)
+			Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100f) ;
+			if (hit.transform.TryGetComponent(out PlayerMovement otherPlayerMovement))
 			{
-				print("Я попал по" + hit.transform.GetComponent<PlayerMovement>().OwnerClientId);
 				DamageToClient.Value = new DamageToClientData
 				{
 					damageOrigin = OwnerClientId,
-					damageTarget = hit.transform.GetComponent<PlayerMovement>().OwnerClientId,
+					damageTarget = otherPlayerMovement.OwnerClientId,
 					damageWeapon = 0,
 					damageDestination = Vector3.Distance(transform.position, hit.transform.position),
 					damage = 15f
 				};
+				ServerRpc(DamageToClient.Value);
 			}
 		}
+	}
+	[ServerRpc]
+	private void ServerRpc(DamageToClientData data)
+	{
+		ClientRpcParams clientRpcParams = new ClientRpcParams
+		{
+			Send = new ClientRpcSendParams
+			{
+				TargetClientIds = new ulong[] { data.damageTarget }
+			}
+		};
+
+		TestClientRpc(data, clientRpcParams);
+	}
+
+	[ClientRpc]
+	private void TestClientRpc(DamageToClientData data, ClientRpcParams clientRpcParams = default)
+	{
+		Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {data.damageOrigin}, с дистанции {data.damageDestination}, на сокрушительные {data.damage} демага!");
 	}
 }
