@@ -1,10 +1,16 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections.LowLevel.Unsafe;
+using System.Collections;
 
 public class PlayerMovement : NetworkBehaviour
 {
 	[SerializeField] private CharacterController controller;
+	[SerializeField] private Animator toasterHands;
+
+	bool shooting = false;
+	float burstSpacer = 0.2f;
+
 	private NetworkVariable<DamageToClientData> DamageToClient = new NetworkVariable<DamageToClientData>(default,NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
 	public struct DamageToClientData: INetworkSerializable
@@ -82,6 +88,9 @@ public class PlayerMovement : NetworkBehaviour
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
+			bool shooting = true;
+			toasterHands.SetBool("SetShoot", true);
+			
 			RaycastHit hit;
 			if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100f))
 			{
@@ -98,8 +107,18 @@ public class PlayerMovement : NetworkBehaviour
 					ServerRpc(DamageToClient.Value);
 				}
 			}
+			StartCoroutine(ExampleCoroutine());
+			
 		}
 	}
+
+	IEnumerator ExampleCoroutine()
+	{
+		yield return new WaitForSeconds(0.2f);
+		toasterHands.SetBool("SetShoot", false);
+	}
+
+
 	[ServerRpc]
 	private void ServerRpc(DamageToClientData data)
 	{

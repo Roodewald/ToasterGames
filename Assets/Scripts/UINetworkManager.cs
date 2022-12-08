@@ -16,6 +16,10 @@ public class UINetworkManager : MonoBehaviour
 	[SerializeField] private TMP_InputField port;
 	[SerializeField] private Button applyButton;
 	[SerializeField] private UnityTransport unityTransport;
+	//[SerializeField] private TMP_Text ping;
+
+
+
 
 	private void Awake()
 	{
@@ -23,6 +27,10 @@ public class UINetworkManager : MonoBehaviour
 		serverButton.onClick.AddListener(() => NetworkManager.Singleton.StartServer());
 		HostButton.onClick.AddListener(() => NetworkManager.Singleton.StartHost());
 		clientButton.onClick.AddListener(() => NetworkManager.Singleton.StartClient());
+	}
+	private void Update()
+	{
+		//ping.text = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(0).ToString();
 	}
 	public void applyIpAndPort()
 	{
