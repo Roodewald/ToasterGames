@@ -149,7 +149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1486686152245294862
 Transform:
   m_ObjectHideFlags: 0
@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 9180644020100336305}
   - component: {fileID: 4299308417711403870}
   m_Layer: 3
-  m_Name: Plane.001
+  m_Name: Toaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1058,7 +1058,6 @@ GameObject:
   - component: {fileID: 2957980649413726237}
   - component: {fileID: 2203728367314144981}
   - component: {fileID: 701033459253605747}
-  - component: {fileID: 3915073815390703153}
   m_Layer: 0
   m_Name: WeaponCamera
   m_TagString: Untagged
@@ -1158,20 +1157,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!114 &3915073815390703153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4270574023964691557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 131c440bc17b0b04a80a8dffdba09348, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toasterHands: {fileID: 4648126263947724090}
-  playerCamera: {fileID: 7870618660213416270}
 --- !u!1 &4346037852934879930
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,7 +1241,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7332065652205315879, guid: 4e4e5b5fbf07f3f479ac6ccd542ea714, type: 3}
+  - {fileID: 7332065652205315879, guid: 175e93c984f1bc04f8ca5415aeedef4d, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1696,7 +1681,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7332065652205315879, guid: 4e4e5b5fbf07f3f479ac6ccd542ea714, type: 3}
+  - {fileID: 7332065652205315879, guid: 175e93c984f1bc04f8ca5415aeedef4d, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1900,6 +1885,7 @@ GameObject:
   - component: {fileID: 1617744280719956209}
   - component: {fileID: 4793245415656873751}
   - component: {fileID: 4549767616319394245}
+  - component: {fileID: 9456652553891510}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1915,7 +1901,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7870618660213416270}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.98, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2064,6 +2050,23 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!114 &9456652553891510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7870618660213416270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131c440bc17b0b04a80a8dffdba09348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toasterHands: {fileID: 4648126263947724090}
+  playerCamera: {fileID: 7870618660213416270}
+  toastPrefab: {fileID: 2367580316140468005, guid: 2b100a680d79d364c8742e9f991c53b2,
+    type: 3}
+  toasterSpawner: {fileID: 9180644020100336305}
 --- !u!1 &8146994448878683556
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,8 @@ public class WeaponManager : NetworkBehaviour
 {
 	[SerializeField] private Animator toasterHands;
 	public GameObject playerCamera;
-
+	public GameObject toastPrefab;
+	public Transform toasterSpawner;
 
 	private NetworkVariable<DamageToClientData> DamageToClient = new NetworkVariable<DamageToClientData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -33,7 +34,9 @@ public class WeaponManager : NetworkBehaviour
 	private void Update()
 	{
 		if (!IsOwner) return;
-		Shoot();
+
+		ThrowGranade();
+		//Shoot();
 
 	}
 
@@ -68,6 +71,21 @@ public class WeaponManager : NetworkBehaviour
 	{
 		yield return new WaitForSeconds(0.2f);
 		toasterHands.SetBool("SetShoot", false);
+	}
+
+
+	private void ThrowGranade()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			toasterHands.SetBool("SetShoot", true);
+			GameObject toast = Instantiate(toastPrefab, toasterSpawner.position, transform.rotation);
+			toast.GetComponent<NetworkObject>().Spawn();
+
+
+
+			StartCoroutine(ExampleCoroutine());
+		}
 	}
 
 	[ServerRpc]
