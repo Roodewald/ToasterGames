@@ -8,7 +8,7 @@ public class PlayerManager : NetworkBehaviour
 	[SerializeField] private CharacterController controller;
 
 	float xRotation = 0f;
-	
+
 	public GameObject playerCamera;
 	public float mouseSensetiviy = 100f;
 	public float speed = 12f;
@@ -18,7 +18,7 @@ public class PlayerManager : NetworkBehaviour
 	{
 		if (IsOwner)
 		{
-			transform.position = new Vector3(Random.Range(5,5),0,Random.Range(5,5));
+			transform.position = new Vector3(Random.Range(5, 5), 0, Random.Range(5, 5));
 
 			playerCamera.SetActive(true);
 		}
@@ -52,8 +52,8 @@ public class PlayerManager : NetworkBehaviour
 
 		controller.Move(move.normalized * speed * Time.deltaTime);
 	}
-	
 
 
-	
+
+
 }
