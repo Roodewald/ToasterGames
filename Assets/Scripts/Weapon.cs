@@ -4,7 +4,7 @@ using static ToasterGames.ShootingEverything.ClientServer;
 
 namespace ToasterGames.ShootingEverything
 {
-	public class Weapon : WeaponBehavior
+	public class Weapon : WeaponBehaviour
 	{
 		#region SERIALIZEDFIELDS 
 
@@ -43,7 +43,7 @@ namespace ToasterGames.ShootingEverything
 
 		#region FIELDS
 		private Camera playerCamera;
-		private PlayerBehavior playerBehaviour;
+		private PlayerBehaviour playerBehaviour;
 		private ClientServer clientServer;
 		private NetworkObject networkObject;
 		private DamageToClientData DamageToClient;
@@ -53,7 +53,7 @@ namespace ToasterGames.ShootingEverything
 		#region UNITY
 		protected override void Awake()
 		{
-			playerBehaviour = GetComponentInParent<PlayerBehavior>();
+			playerBehaviour = GetComponentInParent<PlayerBehaviour>();
 			clientServer = GetComponentInParent<ClientServer>();
 			networkObject = clientServer.GetNetworkObject();
 			playerCamera = playerBehaviour.GetCameraWorld();

@@ -5,9 +5,10 @@ using UnityEngine;
 
 namespace ToasterGames.ShootingEverything
 {
-	public class Player : PlayerBehavior
+	public class Player : PlayerBehaviour
 	{
 		[SerializeField] private CharacterController controller;
+		[SerializeField] private InventoryBehaviour inventory;
 
 		#region FIELDS
 		float xRotation = 0f;
@@ -15,9 +16,15 @@ namespace ToasterGames.ShootingEverything
 		public Camera playerCamera;
 		public float mouseSensetiviy = 5f;
 		public float speed = 12f;
+
 		#endregion
 
 		#region UNITY
+		private void Awake()
+		{
+			inventory.Init();
+		}
+
 		private void Update()
 		{
 			if (!IsOwner) return;
@@ -47,6 +54,9 @@ namespace ToasterGames.ShootingEverything
 
 			controller.Move(move.normalized * speed * Time.deltaTime);
 		}
+		
+
+
 		public override void OnNetworkSpawn()
 		{
 			if (IsOwner)

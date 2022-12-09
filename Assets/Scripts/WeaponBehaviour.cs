@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ToasterGames.ShootingEverything
 {
-	public abstract class WeaponBehavior : MonoBehaviour
+	public abstract class WeaponBehaviour : MonoBehaviour
 	{
 		#region UNITY
 		protected virtual void Awake() { }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ToasterGames.ShootingEverything
 {
-	public abstract class PlayerBehavior : NetworkBehaviour
+	public abstract class PlayerBehaviour : NetworkBehaviour
 	{
 		public abstract Camera GetCameraWorld();
 	}
