@@ -1788,6 +1788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6981683849414000644}
   - component: {fileID: 4648126263947724090}
+  - component: {fileID: 4294983015465276681}
   m_Layer: 3
   m_Name: toastHeands
   m_TagString: Untagged
@@ -1838,6 +1839,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4294983015465276681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7757517243282823870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02a55205df0c164091dc466ee4cc736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  automatic: 0
+  projectileImpulse: 400
+  roundsPerMinutes: 200
+  mask:
+    serializedVersion: 2
+    m_Bits: 0
+  maximumDistance: 500
+  socketEjection: {fileID: 0}
+  prefabCasing: {fileID: 0}
 --- !u!1 &7822456573060713247
 GameObject:
   m_ObjectHideFlags: 0
@@ -1882,10 +1904,10 @@ GameObject:
   - component: {fileID: 7157391102120283582}
   - component: {fileID: 1924590668595824928}
   - component: {fileID: 7022222865086535120}
-  - component: {fileID: 1617744280719956209}
   - component: {fileID: 4793245415656873751}
+  - component: {fileID: 6635523601909098529}
   - component: {fileID: 4549767616319394245}
-  - component: {fileID: 9456652553891510}
+  - component: {fileID: 4820763987143664269}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1992,22 +2014,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1617744280719956209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7870618660213416270}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50d0c7d47bd86724b85867926ae1342c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 7022222865086535120}
-  playerCamera: {fileID: 1040873997430114499}
-  mouseSensetiviy: 5
-  speed: 12
 --- !u!114 &4793245415656873751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2024,6 +2030,22 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &6635523601909098529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7870618660213416270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa16987a2787f9f4b974f5db973b1d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 7022222865086535120}
+  playerCamera: {fileID: 4362096002461504817}
+  mouseSensetiviy: 5
+  speed: 12
 --- !u!114 &4549767616319394245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2050,7 +2072,7 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
---- !u!114 &9456652553891510
+--- !u!114 &4820763987143664269
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2059,14 +2081,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7870618660213416270}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 131c440bc17b0b04a80a8dffdba09348, type: 3}
+  m_Script: {fileID: 11500000, guid: 559c97c885e21a8458f15adf55e72f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toasterHands: {fileID: 4648126263947724090}
-  playerCamera: {fileID: 7870618660213416270}
-  toastPrefab: {fileID: 2367580316140468005, guid: 2b100a680d79d364c8742e9f991c53b2,
-    type: 3}
-  toasterSpawner: {fileID: 9180644020100336305}
 --- !u!1 &8146994448878683556
 GameObject:
   m_ObjectHideFlags: 0

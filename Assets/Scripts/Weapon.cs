@@ -71,6 +71,7 @@ namespace ToasterGames.ShootingEverything
 
 		private void Shoot()
 		{
+			
 			if (Input.GetMouseButtonDown(0))
 			{
 				RaycastHit hit;
