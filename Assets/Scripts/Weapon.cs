@@ -6,7 +6,7 @@ namespace ToasterGames.ShootingEverything
 {
 	public class Weapon : WeaponBehavior
 	{
-		#region FIELDS SERIALIZED
+		#region SERIALIZEDFIELDS 
 
 		[Header("Firing")]
 
@@ -22,9 +22,6 @@ namespace ToasterGames.ShootingEverything
 		[SerializeField]
 		private int roundsPerMinutes = 200;
 
-		[Tooltip("Mask of things recognized when firing.")]
-		[SerializeField]
-		private LayerMask mask;
 
 		[Tooltip("Maximum distance at which this weapon can fire accurately. Shots beyond this distance will not use linetracing for accuracy.")]
 		[SerializeField]
@@ -75,7 +72,7 @@ namespace ToasterGames.ShootingEverything
 			if (Input.GetMouseButtonDown(0))
 			{
 				RaycastHit hit;
-				if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 100f))
+				if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maximumDistance))
 				{
 					if (hit.transform.TryGetComponent(out Player otherPlayer))
 					{
@@ -95,4 +92,3 @@ namespace ToasterGames.ShootingEverything
 		#endregion
 	}
 }
-
