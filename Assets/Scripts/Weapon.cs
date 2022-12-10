@@ -22,6 +22,12 @@ namespace ToasterGames.ShootingEverything
 		[SerializeField]
 		private int roundsPerMinutes = 200;
 
+		[SerializeField]
+		private int totalAmunition = 2;
+
+		[SerializeField]
+		private float damageWeapon = 10f;
+
 
 		[Tooltip("Maximum distance at which this weapon can fire accurately. Shots beyond this distance will not use linetracing for accuracy.")]
 		[SerializeField]
@@ -47,48 +53,65 @@ namespace ToasterGames.ShootingEverything
 		private ClientServer clientServer;
 		private NetworkObject networkObject;
 		private DamageToClientData DamageToClient;
+		private int ammunitionCurrent;
+		private Animator weaponAnimator;
+		private Inventory inventory;
 
 		#endregion
 
 		#region UNITY
 		protected override void Awake()
 		{
+			inventory = GetComponentInParent<Inventory>();
+			ammunitionCurrent = totalAmunition;
+			weaponAnimator = GetComponent<Animator>();
 			playerBehaviour = GetComponentInParent<PlayerBehaviour>();
 			clientServer = GetComponentInParent<ClientServer>();
 			networkObject = clientServer.GetNetworkObject();
 			playerCamera = playerBehaviour.GetCameraWorld();
 		}
-		protected override void Update()
-		{
-			Shoot();
-		}
+
 		#endregion
 
 		#region METHODS
 
-		private void Shoot()
+		public override void Reload()
 		{
-			
-			if (Input.GetMouseButtonDown(0))
+			//Play Reload Animation.
+			weaponAnimator.Play(HasAmmunition() ? "Reload" : "Reload Empty", 0, 0.0f);
+			ammunitionCurrent = totalAmunition;
+		}
+
+		public override void Fire()
+		{
+			weaponAnimator.Play("Fire");
+			RaycastHit hit;
+			if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maximumDistance))
 			{
-				RaycastHit hit;
-				if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maximumDistance))
+				if (hit.transform.TryGetComponent(out Player otherPlayer))
 				{
-					if (hit.transform.TryGetComponent(out Player otherPlayer))
+					DamageToClient = new DamageToClientData
 					{
-						DamageToClient = new DamageToClientData
-						{
-							damageOrigin = networkObject.OwnerClientId,
-							damageTarget = otherPlayer.OwnerClientId,
-							damageWeapon = 0,
-							damageDestination = Vector3.Distance(transform.position, hit.transform.position),
-							damage = 15f
-						};
-						clientServer.ServerRpc(DamageToClient);
-					}
+						damageOrigin = networkObject.OwnerClientId,
+						damageTarget = otherPlayer.OwnerClientId,
+						damageWeapon = inventory.GetEquippedIndex(),
+						damageDestination = Vector3.Distance(transform.position, hit.transform.position),
+						damage = damageWeapon
+					};
+					clientServer.ServerRpc(DamageToClient);
 				}
 			}
+			ammunitionCurrent--;
+
 		}
+		#endregion
+
+		#region GETTERS
+		public override bool IsFull() => ammunitionCurrent == totalAmunition;
+		public override bool HasAmmunition() => ammunitionCurrent > 0;
+		public override bool IsAutomatic() => automatic;
+		public override float GetRateOfFire() => roundsPerMinutes;
+
 		#endregion
 	}
 }

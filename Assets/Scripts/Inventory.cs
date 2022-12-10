@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace ToasterGames.ShootingEverything
 {
 	public class Inventory : InventoryBehaviour
@@ -67,6 +63,17 @@ namespace ToasterGames.ShootingEverything
 			//Return.
 			return equipped;
 		}
+		public override void ChangeWeapon(float context)
+		{
+			if (context > 0)
+			{
+				Equip(GetNextIndex());
+			}
+			else
+			{
+				Equip(GetNextIndex());
+			}
+		}
 
 		#endregion
 
@@ -78,7 +85,6 @@ namespace ToasterGames.ShootingEverything
 			int newIndex = equippedIndex - 1;
 			if (newIndex < 0)
 				newIndex = weapons.Length - 1;
-
 			//Return.
 			return newIndex;
 		}
@@ -89,7 +95,6 @@ namespace ToasterGames.ShootingEverything
 			int newIndex = equippedIndex + 1;
 			if (newIndex > weapons.Length - 1)
 				newIndex = 0;
-
 			//Return.
 			return newIndex;
 		}

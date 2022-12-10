@@ -35,6 +35,8 @@ namespace ToasterGames.ShootingEverything
 		/// <param name="index">Index of the weapon to equip.</param>
 		public abstract WeaponBehaviour Equip(int index);
 
+		public abstract void ChangeWeapon(float context);
+
 		#endregion
 	}
 }

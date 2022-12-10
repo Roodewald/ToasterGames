@@ -57,7 +57,7 @@ namespace ToasterGames.ShootingEverything
 		[ClientRpc]
 		private void TestClientRpc(DamageToClientData data, ClientRpcParams clientRpcParams = default)
 		{
-			Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {data.damageOrigin}, с дистанции {data.damageDestination}, на сокрушительные {data.damage} демага!");
+			Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {data.damageOrigin}, c оружия{data.damageOrigin} с дистанции {data.damageDestination}, на сокрушительные {data.damage} демага!");
 		}
 		#endregion
 
