@@ -25,11 +25,20 @@ namespace ToasterGames.ShootingEverything
 		/// Returns the reload empty audio clip.
 		//public abstract AudioClip GetAudioClipReloadEmpty();
 
-		//returns the have amunation
+		/// Returns the full Magazine
 		public abstract bool IsFull();
+
+		/// If weapon have ammunation to Shoot
 		public abstract bool HasAmmunition();
+
+		///If weapon automatic
 		public abstract bool IsAutomatic();
+
+		///How fast weapon can shoot
 		public abstract float GetRateOfFire();
+
+		/// Get weapon animator
+		public abstract Animator GetAnimator();
 
 		#endregion
 

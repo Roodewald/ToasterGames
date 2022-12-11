@@ -18,7 +18,11 @@ namespace ToasterGames.ShootingEverything
 		private bool holdingButtonFire;
 		private WeaponBehaviour equippedWeapon;
 		private float lastShotTime;
+
 		private PlayerInput playerInput;
+
+		private Vector2 playerMove;
+		private Vector2 playerLook;
 		#endregion
 
 		#region UNITY
@@ -55,13 +59,21 @@ namespace ToasterGames.ShootingEverything
 			//Save the shot time, so we can calculate the fire rate correctly.
 			lastShotTime = Time.time;
 			//Fire the weapon! Make sure that we also pass the scope's spread multiplier if we're aiming.
-			equippedWeapon.Fire();
+			if (equippedWeapon.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+			{
+				equippedWeapon.Fire();
+			}
+		}
+
+		public void TryLook(InputAction.CallbackContext context)
+		{
+			playerLook = context.ReadValue<Vector2>();
 		}
 
 		private void Look()
 		{
-			float mouseX = Input.GetAxisRaw("Mouse X") * mouseSensetiviy;
-			float mouseY = Input.GetAxisRaw("Mouse Y") * mouseSensetiviy;
+			float mouseX = playerLook.x * mouseSensetiviy;
+			float mouseY = playerLook.y * mouseSensetiviy;
 
 			xRotation -= mouseY;
 			xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -69,14 +81,19 @@ namespace ToasterGames.ShootingEverything
 			playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 			transform.Rotate(Vector3.up * mouseX);
 		}
+
+		public void OnTryMove(InputAction.CallbackContext context)
+		{
+			playerMove = context.ReadValue<Vector2>();
+		}
 		private void Move()
 		{
-			float x = Input.GetAxisRaw("Horizontal");
-			float z = Input.GetAxisRaw("Vertical");
+			float x = playerMove.x;
+			float z = playerMove.y;
 
 			Vector3 move = transform.right * x + transform.forward * z;
 
-			controller.Move(move.normalized * speed * Time.deltaTime);
+			controller.Move(move * speed * Time.deltaTime);
 		}
 
 		public void OnTryReload(InputAction.CallbackContext context)

@@ -107,10 +107,16 @@ namespace ToasterGames.ShootingEverything
 		#endregion
 
 		#region GETTERS
+
 		public override bool IsFull() => ammunitionCurrent == totalAmunition;
+
 		public override bool HasAmmunition() => ammunitionCurrent > 0;
+
 		public override bool IsAutomatic() => automatic;
+
 		public override float GetRateOfFire() => roundsPerMinutes;
+
+		public override Animator GetAnimator() => weaponAnimator;
 
 		#endregion
 	}
