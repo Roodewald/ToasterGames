@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Netcode;
+using Mirror;
 using UnityEngine;
 
 namespace ToasterGames.ShootingEverything
@@ -9,10 +9,11 @@ namespace ToasterGames.ShootingEverything
 	{
 		#region FIELDS
 
-		private NetworkObject networkObject;
-		private NetworkVariable<DamageToClientData> DamageToClient = new NetworkVariable<DamageToClientData>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+		private NetworkTransform networkTransform;
 
-		public struct DamageToClientData : INetworkSerializable
+		private SyncList<DamageToClientData> DamageToClient = new SyncList<DamageToClientData>();
+
+		public struct DamageToClientData
 		{
 			public ulong damageOrigin;
 			public ulong damageTarget;
@@ -20,49 +21,33 @@ namespace ToasterGames.ShootingEverything
 			public float damageDestination;
 			public float damage;
 
-			public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-			{
-				serializer.SerializeValue(ref damageOrigin);
-				serializer.SerializeValue(ref damageTarget);
-				serializer.SerializeValue(ref damageWeapon);
-				serializer.SerializeValue(ref damageDestination);
-				serializer.SerializeValue(ref damage);
-			}
 		}
 		#endregion
 
 		#region UNITY
 		private void Awake()
 		{
-			networkObject = GetComponentInChildren<NetworkObject>();
+			networkTransform = GetComponent<NetworkTransform>();
 		}
 		#endregion
 
 		#region RPC
 
-		[ServerRpc]
+		[Command]
 		public void ServerRpc(DamageToClientData data)
 		{
-			ClientRpcParams clientRpcParams = new ClientRpcParams
-			{
-				Send = new ClientRpcSendParams
-				{
-					TargetClientIds = new ulong[] { data.damageTarget }
-				}
-			};
-
-			ApplyDamageClientRpc(data, clientRpcParams);
+			ApplyDamageClientRpc(data);
 		}
-		
+
 		[ClientRpc]
-		private void ApplyDamageClientRpc(DamageToClientData data, ClientRpcParams clientRpcParams = default)
+		private void ApplyDamageClientRpc(DamageToClientData data)
 		{
-			Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {data.damageOrigin}, c оружия{data.damageOrigin} с дистанции {data.damageDestination}, на сокрушительные {data.damage} демага!");
+			Debug.Log($"Damage Form: {data.damageOrigin}, TO:{data.damageTarget}  Weapon ID{data.damageWeapon} DiSTANCE {data.damageDestination}, DAMAGE {data.damage} демага!");
 		}
 		#endregion
 
 		#region GETERS
-		public NetworkObject GetNetworkObject() => networkObject;
+		public NetworkTransform GetNetworkObject() => networkTransform;
 		#endregion
 	}
 }

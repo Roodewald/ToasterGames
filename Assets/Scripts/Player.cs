@@ -34,7 +34,9 @@ namespace ToasterGames.ShootingEverything
 
 		private void Update()
 		{
-			if (!IsOwner) return;
+			if (!isLocalPlayer) return;
+			playerCamera.gameObject.SetActive(true);
+			playerInput.enabled = true;
 			Look();
 			Move();
 
@@ -168,17 +170,6 @@ namespace ToasterGames.ShootingEverything
 			return true;
 		}
 
-
-		public override void OnNetworkSpawn()
-		{
-			if (IsOwner)
-			{
-				transform.position = new Vector3(Random.Range(5, 5), 0, Random.Range(5, 5));
-
-				playerCamera.gameObject.SetActive(true);
-				playerInput.enabled = true;
-			}
-		}
 		#endregion
 
 		#region GETERS
