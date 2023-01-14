@@ -1,4 +1,4 @@
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using static ToasterGames.ShootingEverything.ClientServer;
 
@@ -51,7 +51,7 @@ namespace ToasterGames.ShootingEverything
 		private Camera playerCamera;
 		private PlayerBehaviour playerBehaviour;
 		private ClientServer clientServer;
-		private NetworkTransform networkTransform;
+		private NetworkObject networkObject;
 		private DamageToClientData DamageToClient;
 		private int ammunitionCurrent;
 		private Animator weaponAnimator;
@@ -67,7 +67,7 @@ namespace ToasterGames.ShootingEverything
 			weaponAnimator = GetComponent<Animator>();
 			playerBehaviour = GetComponentInParent<PlayerBehaviour>();
 			clientServer = GetComponentInParent<ClientServer>();
-			networkTransform = clientServer.GetNetworkObject();
+			networkObject = clientServer.GetNetworkObject();
 			playerCamera = playerBehaviour.GetCameraWorld();
 		}
 
@@ -92,8 +92,8 @@ namespace ToasterGames.ShootingEverything
 				{
 					DamageToClient = new DamageToClientData
 					{
-						damageOrigin = networkTransform.netId,
-						damageTarget = otherPlayer.netId,
+						damageOrigin = networkObject.OwnerClientId,
+						damageTarget = otherPlayer.OwnerClientId,
 						damageWeapon = inventory.GetEquippedIndex(),
 						damageDestination = Vector3.Distance(transform.position, hit.transform.position),
 						damage = damageWeapon

@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Mirror;
+using Unity.Netcode.Transports.UTP;
 using System;
-using Mirror.SimpleWeb;
 
 namespace ToasterGames.ShootingEverything
 {
@@ -19,27 +19,33 @@ namespace ToasterGames.ShootingEverything
 		[SerializeField] private TMP_InputField IP;
 		[SerializeField] private TMP_InputField port;
 		[SerializeField] private Button applyButton;
-		[SerializeField] private SimpleWebTransport webTransport;
+		[SerializeField] private UnityTransport unityTransport;
 		[SerializeField] private TMP_Text ping;
 		[SerializeField] private TMP_Text version;
 
 		#endregion
 
+		private bool onServer = false;
+
 		private void Awake()
 		{
-			serverButton.onClick.AddListener(() => NetworkManager.singleton.StartServer());
-			HostButton.onClick.AddListener(() => NetworkManager.singleton.StartHost());
-			clientButton.onClick.AddListener(() => NetworkManager.singleton.StartClient());
+			serverButton.onClick.AddListener(() => NetworkManager.Singleton.StartServer());
+			HostButton.onClick.AddListener(() => NetworkManager.Singleton.StartHost());
+			clientButton.onClick.AddListener(() => NetworkManager.Singleton.StartClient());
+			clientButton.onClick.AddListener(() => onServer=true);
 			version.text = Application.version;
 		}
 		private void Update()
 		{
-			ping.text = $"Ping: {Math.Round(NetworkTime.rtt * 1000)}ms";
+			if (onServer)
+			{
+				ping.text = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(0).ToString();
+			}
 		}
 		public void applyIpAndPort()
 		{
-			NetworkManager.singleton.networkAddress = IP.text;
-			webTransport.port = Convert.ToUInt16(port.text);
+			unityTransport.ConnectionData.Address = IP.text;
+			unityTransport.ConnectionData.Port = Convert.ToUInt16(port.text);
 		}
 	}
 }
