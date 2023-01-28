@@ -14,6 +14,9 @@ namespace ToasterGames.ShootingEverything
 		[SerializeField]
 		private bool automatic;
 
+		[SerializeField]
+		private bool IsProjectile = false;
+
 		[Tooltip("How fast the projectiles are.")]
 		[SerializeField]
 		private float projectileImpulse = 400.0f;
@@ -35,15 +38,14 @@ namespace ToasterGames.ShootingEverything
 
 		[Header("Animation")]
 
-		[Tooltip("Transform that represents the weapon's ejection port, meaning the part of the weapon that casings shoot from.")]
-		[SerializeField]
-		private Transform socketEjection;
 
 		[Header("Resources")]
 		[Tooltip("Casing Prefab.")]
 		[SerializeField]
 		private GameObject prefabCasing;
 
+		[SerializeField]
+		private Transform barrel;
 
 		#endregion
 
@@ -86,23 +88,30 @@ namespace ToasterGames.ShootingEverything
 		{
 			weaponAnimator.Play("Fire");
 			RaycastHit hit;
-			if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maximumDistance))
+
+			if (IsProjectile)
 			{
-				if (hit.transform.TryGetComponent(out Player otherPlayer))
+				clientServer.SpawnProjectileServerRpc(barrel.transform.position, transform.rotation);
+			}
+			else
+			{
+				if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, maximumDistance))
 				{
-					DamageToClient = new DamageToClientData
+					if (hit.transform.TryGetComponent(out Player otherPlayer))
 					{
-						damageOrigin = networkObject.OwnerClientId,
-						damageTarget = otherPlayer.OwnerClientId,
-						damageWeapon = inventory.GetEquippedIndex(),
-						damageDestination = Vector3.Distance(transform.position, hit.transform.position),
-						damage = damageWeapon
-					};
-					clientServer.ServerRpc(DamageToClient);
+						DamageToClient = new DamageToClientData
+						{
+							damageOrigin = networkObject.OwnerClientId,
+							damageTarget = otherPlayer.OwnerClientId,
+							damageWeapon = inventory.GetEquippedIndex(),
+							damageDestination = Vector3.Distance(transform.position, hit.transform.position),
+							damage = damageWeapon
+						};
+						clientServer.ServerRpc(DamageToClient);
+					}
 				}
 			}
 			ammunitionCurrent--;
-
 		}
 		#endregion
 

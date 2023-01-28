@@ -8,11 +8,15 @@ namespace ToasterGames.ShootingEverything
 		[SerializeField] private CharacterController controller;
 		[SerializeField] private InventoryBehaviour inventory;
 		[SerializeField] private Camera playerCamera;
+		[SerializeField] private Transform groundChek;
+		[SerializeField] private LayerMask groundMask;
+
+		
 
 		#region FIELDS
 		float xRotation = 0f;
 
-
+		public float jumpHeight = 3f;
 		public float mouseSensetiviy = 5f;
 		public float speed = 12f;
 		private bool holdingButtonFire;
@@ -20,6 +24,10 @@ namespace ToasterGames.ShootingEverything
 		private float lastShotTime;
 
 		private PlayerInput playerInput;
+
+		private bool IsGrounded;
+		private Vector3 velocity;
+
 
 		private Vector2 playerMove;
 		private Vector2 playerLook;
@@ -32,6 +40,8 @@ namespace ToasterGames.ShootingEverything
 			inventory.Init();
 		}
 
+
+
 		private void Update()
 		{
 			if (!IsOwner) return;
@@ -41,7 +51,6 @@ namespace ToasterGames.ShootingEverything
 			equippedWeapon = inventory.GetEquipped();
 			if (holdingButtonFire)
 			{
-				
 				//Check.
 				if ( equippedWeapon.HasAmmunition() && equippedWeapon.IsAutomatic())
 				{
@@ -51,6 +60,8 @@ namespace ToasterGames.ShootingEverything
 				}
 			}
 		}
+
+	
 		#endregion
 
 		#region METHODS
@@ -72,8 +83,9 @@ namespace ToasterGames.ShootingEverything
 
 		private void Look()
 		{
-			float mouseX = playerLook.x * mouseSensetiviy;
-			float mouseY = playerLook.y * mouseSensetiviy;
+
+			float mouseX = playerLook.x * mouseSensetiviy / 10;
+			float mouseY = playerLook.y * mouseSensetiviy / 10;
 
 			xRotation -= mouseY;
 			xRotation = Mathf.Clamp(xRotation, -90f, 90f);
@@ -88,12 +100,32 @@ namespace ToasterGames.ShootingEverything
 		}
 		private void Move()
 		{
+
+			IsGrounded = Physics.CheckSphere(groundChek.position, 0.2f, groundMask);
+
+			if (IsGrounded && velocity.y < 0)
+			{
+				velocity.y = -2f;
+			}
+
 			float x = playerMove.x;
 			float z = playerMove.y;
 
 			Vector3 move = transform.right * x + transform.forward * z;
 
 			controller.Move(move * speed * Time.deltaTime);
+
+			velocity.y += Physics.gravity.y * Time.deltaTime;
+
+			controller.Move(velocity * Time.deltaTime);
+		}
+
+		public void OnTryJump(InputAction.CallbackContext context)
+		{
+			if (context.performed && IsGrounded)
+			{
+				velocity.y = Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
+			}
 		}
 
 		public void OnTryReload(InputAction.CallbackContext context)

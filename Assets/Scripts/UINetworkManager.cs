@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.Netcode.Transports.UTP;
 using System;
+using Unity.Services.Relay;
+using QFSW.QC;
 
 namespace ToasterGames.ShootingEverything
 {
@@ -35,13 +37,13 @@ namespace ToasterGames.ShootingEverything
 			clientButton.onClick.AddListener(() => onServer=true);
 			version.text = Application.version;
 		}
-		private void Update()
+
+		[Command]
+		private void Ping(ulong id)
 		{
-			if (onServer)
-			{
-				ping.text = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(0).ToString();
-			}
+			Debug.Log(NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(id).ToString());
 		}
+
 		public void applyIpAndPort()
 		{
 			unityTransport.ConnectionData.Address = IP.text;

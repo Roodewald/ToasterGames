@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -20,6 +21,8 @@ public class TestLobby : MonoBehaviour
 
 	private async void Start()
 	{
+		//Получение токена анонимной авторизации
+
 		await UnityServices.InitializeAsync();
 
 		AuthenticationService.Instance.SignedIn += () =>
@@ -38,6 +41,7 @@ public class TestLobby : MonoBehaviour
 		HandleLobbyHeartbeatAsync();
 	}
 
+	//Создание сердцебиения каждые 15 секунд
 	private async Task HandleLobbyHeartbeatAsync()
 	{
 		if (hostLobby != null)
@@ -53,6 +57,7 @@ public class TestLobby : MonoBehaviour
 		}
 	}
 
+	//Создание лобби
 	[Command]
 	private async void CreateLobby()
 	{
@@ -151,7 +156,6 @@ public class TestLobby : MonoBehaviour
 		}
 	}
 
-	[Command]
 	private void PrintPlayers(Lobby lobby)
 	{
 		Debug.Log("Players in Lobby " + lobby.Name);
@@ -180,16 +184,13 @@ public class TestLobby : MonoBehaviour
 			Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
 
 			string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
 			Debug.Log(joinCode);
 
-			NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
-				
-				allocation.RelayServer.IpV4,
-				(ushort)allocation.RelayServer.Port,
-				allocation.AllocationIdBytes,
-				allocation.Key,
-				allocation.ConnectionData
-			);
+			RelayServerData relayServerData= new RelayServerData(allocation, "dtls");
+
+			NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+
 			NetworkManager.Singleton.StartHost();
 		}
 		catch (RelayServiceException e)
@@ -206,14 +207,10 @@ public class TestLobby : MonoBehaviour
 		{
 			JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
-			NetworkManager.Singleton.GetComponent<UnityTransport>().SetClientRelayData(
-				joinAllocation.RelayServer.IpV4,
-				(ushort)joinAllocation.RelayServer.Port,
-				joinAllocation.AllocationIdBytes,
-				joinAllocation.Key,
-				joinAllocation.ConnectionData,
-				joinAllocation.HostConnectionData
-			);
+			RelayServerData relayServerData = new RelayServerData(joinAllocation, "dtls");
+
+			NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+
 			NetworkManager.Singleton.StartClient();
 		}
 		catch (RelayServiceException e)
@@ -221,5 +218,17 @@ public class TestLobby : MonoBehaviour
 			Debug.Log(e);
 		}
 		
+	}
+	[Command]
+	private void Ping(ulong id)
+	{
+		try
+		{
+			Debug.Log(NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(id).ToString());
+		}
+		catch
+		{
+			Debug.Log("Exception");
+		}
 	}
 }

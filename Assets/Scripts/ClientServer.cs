@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,6 +5,8 @@ namespace ToasterGames.ShootingEverything
 {
 	public class ClientServer : NetworkBehaviour
 	{
+		public GameObject projectile;
+		public static ClientServer instance;
 		#region FIELDS
 
 		private NetworkObject networkObject;
@@ -36,6 +36,14 @@ namespace ToasterGames.ShootingEverything
 		{
 			networkObject = GetComponentInChildren<NetworkObject>();
 		}
+
+		private void Start()
+		{
+			if (IsOwner)
+			{
+				instance = this;
+			}
+		}
 		#endregion
 
 		#region RPC
@@ -53,11 +61,18 @@ namespace ToasterGames.ShootingEverything
 
 			ApplyDamageClientRpc(data, clientRpcParams);
 		}
-		
+
 		[ClientRpc]
 		private void ApplyDamageClientRpc(DamageToClientData data, ClientRpcParams clientRpcParams = default)
 		{
 			Debug.Log($"Ой,ой,ой дружочек, пирожочек. По тебе попал игрок с ID: {data.damageOrigin}, c оружия{data.damageOrigin} с дистанции {data.damageDestination}, на сокрушительные {data.damage} демага!");
+		}
+
+		[ServerRpc]
+		public void SpawnProjectileServerRpc(Vector3 position, Quaternion rotation)
+		{
+			GameObject go = Instantiate(projectile, position, rotation);
+			go.GetComponent<NetworkObject>().Spawn();
 		}
 		#endregion
 
